@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -42,12 +41,25 @@
         html, body { margin: 0; padding: 0; width: 100%; }
         * { box-sizing: border-box; }
 
+        /* ==========================================================
+           BIẾN TỈ LỆ CỘT (CHUẨN 100%) – GIÚP CĂN CHUẨN GIỮA BẢNG & KHỐI DƯỚI
+           ========================================================== */
+        :root {
+            --c1: 5;   /* STT */
+            --c2: 49;  /* Tên & Quy cách */
+            --c3: 7;   /* ĐVT */
+            --c4: 9;   /* Số lượng */
+            --c5: 10;  /* Nguyên giá */
+            --c6: 8;   /* Giảm giá */
+            --c7: 6;   /* VAT */
+            --c8: 6;   /* Thành tiền */
+        }
+
         body {
             font-family: 'SVN-Stem', sans-serif;
             font-size: 14px;
             line-height: 1.5;
             color: #333333;
-            /* Ngăn trình duyệt tự “giả” đậm/nghiêng khi in */
             font-synthesis-weight: none;
             font-synthesis-style: none;
         }
@@ -65,10 +77,8 @@
         tr { page-break-inside: avoid; page-break-after: auto; }
         tfoot { display: table-row-group !important; }
 
-        /* Mặc định bảng có viền nhẹ để in rõ (có thể bị override ở component) */
         table, th, td { border: 1px solid #ddd; }
 
-        /* @media print – giữ màu nền/viền */
         @media print {
             * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
@@ -82,7 +92,7 @@
             gap: 10px;
         }
         .row.center { align-items: center; }
-        .row.summary { padding: 0 10px; }
+        .row.summary { padding: 5px 10px 0 0; }
 
         .justify-between { justify-content: space-between; }
         .right { text-align: right; }
@@ -128,11 +138,22 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            border: none !important;     /* bỏ viền khung ngoài */
+            border: none !important;
             margin-bottom: 8px;
+            table-layout: fixed; /* rất quan trọng để width % cố định */
         }
 
-        /* Header bảng sản phẩm (thead đầu) */
+        /* Áp width cho từng cột qua biến */
+        table.product col:nth-child(1){ width: calc(var(--c1)*1%); }
+        table.product col:nth-child(2){ width: calc(var(--c2)*1%); }
+        table.product col:nth-child(3){ width: calc(var(--c3)*1%); }
+        table.product col:nth-child(4){ width: calc(var(--c4)*1%); }
+        table.product col:nth-child(5){ width: calc(var(--c5)*1%); }
+        table.product col:nth-child(6){ width: calc(var(--c6)*1%); }
+        table.product col:nth-child(7){ width: calc(var(--c7)*1%); }
+        table.product col:nth-child(8){ width: calc(var(--c8)*1%); }
+
+        /* Header bảng sản phẩm */
         table.product thead:first-of-type th {
             font-size: 12px;
             font-weight: bold;
@@ -145,24 +166,15 @@
         /* Nội dung */
         table.product tbody td {
             vertical-align: top;
-            padding: 10px 8px;           /* hợp nhất padding */
+            padding: 10px 8px;
             border-bottom: 1px solid #bbb;
         }
         table.product tbody tr:last-child td { border-bottom: none; }
 
-        /* Căn phải các cột số liệu 4–8 */
-        table.product tbody td:nth-child(4),
-        table.product tbody td:nth-child(5),
-        table.product tbody td:nth-child(6),
-        table.product tbody td:nth-child(7),
-        table.product tbody td:nth-child(8) {
-            text-align: right;
-        }
-
         /* Khoảng cách mô tả ở cột 2 */
         table.product tbody td:nth-child(2) p { margin: 0 0 2px; }
 
-        /* Hàng “tổng tiền hàng” (thead thứ 2) */
+        /* Hàng “tổng tiền hàng” */
         table.product thead:nth-of-type(2) th {
             background-color: #ddd;
             color: #000;
@@ -177,24 +189,23 @@
         }
 
         /* =========================================
-           KHỐI SAU BẢNG – 2 CỘT 58/42
+           KHỐI SAU BẢNG – 2 CỘT 58/42 (TỰ CĂN THEO BẢNG)
            ========================================= */
         .after-table {
             display: flex;
             align-items: flex-start;
-            gap: 24px;
+            gap: 10px;
             margin-top: 10px;
         }
 
-        .after-left {
-            width: 52%;
-            padding-right: 16px;
+        .after-left  {
+            width: calc( (var(--c1) + var(--c2)) * 1% );
+            padding-right: 15px;
         }
         .after-right {
-            width: 48%;
-            padding-left: 18px;              /* khoảng thở bên phải */
-            border-left: 1px solid #d9d9d9;  /* vạch dọc ngăn cách */
-            margin-left: 0 !important;       /* chống lệch nếu HTML cũ còn inline margin */
+            width: calc( (var(--c3) + var(--c4) + var(--c5) + var(--c6) + var(--c7) + var(--c8)) * 1% );
+            padding-left: 20px;
+            border-left: 1px solid #d9d9d9;
             box-sizing: border-box;
         }
 
@@ -204,7 +215,7 @@
         .note-list { margin: 0; padding-left: 18px; }
         .note-list li { margin: 0 0 8px 0; line-height: 1.5; }
 
-        /* Đường line trước block tiếp theo (“Chính sách …”) */
+        /* Đường line giữa 2 block */
         .after-left .note-block + .note-block {
             border-top: 1px solid #d9d9d9;
             padding-top: 14px;
@@ -218,20 +229,12 @@
             padding: 10px 12px;
         }
 
-        /* Card tổng tiền bên phải */
-        .totals-card {
-            border: 1px solid #e5e5e5;
-            border-radius: 6px;
-            padding: 10px 12px;
-            margin-bottom: 16px;
-            background: #fff;
-        }
         .summary { padding: 8px 0; }
         .summary-emphasis {
             background: #ddd;
             color: #000;
-            padding: 10px 12px;
-            border-radius: 4px;
+            margin: 10px 0px 0px 0px;
+            padding: 10px 12px !important;
         }
 
         /* Danh sách thương hiệu & liên hệ */
@@ -324,15 +327,18 @@
 
         <div style="margin: 10px 0 20px 0;">
             <table class="product" cellspacing="0" cellpadding="0">
+                <colgroup>
+                    <col><col><col><col><col><col><col><col>
+                </colgroup>
                 <thead>
                 <tr>
                     <th style="width:5%;">STT</th>
                     <th style="width:49%;">TÊN &amp; QUY CÁCH SẢN PHẨM</th>
                     <th style="width:7%;">ĐVT</th>
                     <th style="width:9%;">SỐ LƯỢNG</th>
-                    <th class="right" style="width:10%;">NGUYÊN GIÁ</th>
-                    <th class="right" style="width:8%;">GIẢM GIÁ</th>
-                    <th class="right" style="width:6%;">VAT</th>
+                    <th style="width:10%;">NGUYÊN GIÁ</th>
+                    <th style="width:8%;">GIẢM GIÁ</th>
+                    <th class="center" style="width:6%;">VAT</th>
                     <th class="right" style="width:12%;">THÀNH TIỀN</th>
                 </tr>
                 </thead>
@@ -354,10 +360,10 @@
                         </div>
                     </td>
                     <td>cái</td>
-                    <td class="right">1,000</td>
-                    <td class="right">15,000</td>
-                    <td class="right">12,500</td>
-                    <td class="right">8%</td>
+                    <td>1,000</td>
+                    <td>15,000</td>
+                    <td>12,500</td>
+                    <td class="center">8%</td>
                     <td class="right">1,500,000</td>
                 </tr>
 
@@ -384,10 +390,10 @@
                         </div>
                     </td>
                     <td>quyển</td>
-                    <td class="right">100</td>
-                    <td class="right">49,890</td>
-                    <td class="right">42,000</td>
-                    <td class="right">8%</td>
+                    <td>100</td>
+                    <td>49,890</td>
+                    <td>42,000</td>
+                    <td class="center">8%</td>
                     <td class="right">4,989,000</td>
                 </tr>
                 </tbody>
@@ -422,8 +428,8 @@
                 <div class="note-block">
                     <div class="note-title">Chính sách Bảo hành &amp; Đổi trả khi nhận hàng:</div>
                     <ul class="note-list">
-                        <li>Quý khách quay video mở kiện liên mạch, đủ sáng và rõ toàn bộ sản phẩm. Kiểm tra số lượng, chất lượng, quy cách và nội dung đặt in.</li>
-                        <li>Nếu phát hiện thiếu số lượng, sản phẩm không đúng với yêu cầu đặt hàng, vui lòng gửi video/ảnh kèm mã đơn hàng qua Email - Zalo trong 24 giờ.</li>
+                        <li>Quý khách quay video mở kiện liền mạch, đủ sáng và rõ toàn bộ sản phẩm. Kiểm tra số lượng, chất lượng, quy cách và nội dung đặt in.</li>
+                        <li>Nếu phát hiện thiếu số lượng, sản phẩm không đúng với yêu cầu đặt hàng, vui lòng gửi video/ảnh kèm mã đơn hàng qua Email - Zalo trong vòng 24 giờ.</li>
                         <li>Xem thêm chính sách tại www.inthanhdat.com</li>
                     </ul>
                 </div>
@@ -431,7 +437,7 @@
 
             <!-- Phải -->
             <div class="after-right">
-                <div class="totals-card">
+                <div>
                     <div class="row justify-between summary"><span class="bold">Chiết khấu ……%:</span><span>350,000</span></div>
                     <div class="row justify-between summary"><span class="bold">Thu khác:</span><span>150,000</span></div>
                     <div class="row justify-between summary"><span class="bold">Thuế VAT 8%:</span><span>519,120</span></div>
@@ -449,7 +455,7 @@
                 </ul>
 
                 <div class="contact-block">
-                    <div class="row"><span class="c-title">Bộ phận trả hàng:</span><span>0936 333537 · 0932 434488</span></div>
+                    <div class="row"><span class="c-title">Bộ phận trả hàng:</span><span>0936 333537 - 0932 434488</span></div>
                     <div class="row"><span class="c-title">Hotline góp ý:</span><span>0855 333537</span></div>
                     <div class="row"><span class="c-title">Thời gian:</span><span>08:00 - 18:30 Thứ 2 - Thứ 7</span></div>
                     <div class="row"><span class="c-title">Làm việc:</span><span>08:00 - 17:00 Chủ nhật</span></div>
